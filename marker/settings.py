@@ -78,7 +78,7 @@ class Settings(BaseSettings):
     TEXIFY_MODEL_MAX: int = 384 # Max inference length for texify
     TEXIFY_TOKEN_BUFFER: int = 256 # Number of tokens to buffer above max for texify
     TEXIFY_DPI: int = 96 # DPI to render images at
-    TEXIFY_BATCH_SIZE: int = 2 if TORCH_DEVICE_MODEL == "cpu" else 6 # Batch size for texify, lower on cpu due to float32
+    TEXIFY_BATCH_SIZE: int = int(os.getenv('TEXIFY_BATCH_SIZE_CPU', 1)) if TORCH_DEVICE_MODEL == "cpu" else 6 # Batch size for texify, lower on cpu due to float32
     TEXIFY_MODEL_NAME: str = "vikp/texify"
 
     # Layout model
@@ -87,14 +87,14 @@ class Settings(BaseSettings):
     LAYOUT_CHUNK_OVERLAP: int = 64
     LAYOUT_DPI: int = 96
     LAYOUT_MODEL_NAME: str = "vikp/layout_segmenter"
-    LAYOUT_BATCH_SIZE: int = 8 # Max 512 tokens means high batch size
+    LAYOUT_BATCH_SIZE: int = int(os.getenv('LAYOUT_BATCH_SIZE', 1)) # Max 512 tokens means high batch size
 
     # Ordering model
-    ORDERER_BATCH_SIZE: int = 32 # This can be high, because max token count is 128
+    ORDERER_BATCH_SIZE: int = int(os.getenv('ORDERER_BATCH_SIZE', 1)) # This can be high, because max token count is 128
     ORDERER_MODEL_NAME: str = "vikp/column_detector"
 
     # Final editing model
-    EDITOR_BATCH_SIZE: int = 4
+    EDITOR_BATCH_SIZE: int = int(os.getenv('EDITOR_BATCH_SIZE', 1))
     EDITOR_MAX_LENGTH: int = 1024
     EDITOR_MODEL_NAME: str = "vikp/pdf_postprocessor_t5"
     ENABLE_EDITOR_MODEL: bool = False # The editor model can create false positives
